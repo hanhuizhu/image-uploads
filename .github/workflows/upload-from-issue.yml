@@ -1,0 +1,94 @@
+name: Upload Images from Issue
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  upload-images:
+    if: github.event.issue.body != ''
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Extract and download images from issue body
+        run: |
+          mkdir -p images
+          BODY="${{ github.event.issue.body }}"
+
+          # Extract markdown image URLs: ![alt](url)
+          echo "$BODY" | grep -oP '!\[.*?\]\(\K[^)]+' > /tmp/img_urls.txt || true
+
+          # Also extract raw image URLs (png, jpg, jpeg, gif, svg, webp)
+          echo "$BODY" | grep -oP 'https?://[^ '"'"'""<>]+\.(png|jpg|jpeg|gif|svg|webp)' >> /tmp/img_urls.txt || true
+
+          # Also extract GitHub Issue attachment URLs
+          echo "$BODY" | grep -oP 'https?://github\.com/user-attachments/assets/[^ '"'"'""<>)]+' >> /tmp/img_urls.txt || true
+
+          sort -u /tmp/img_urls.txt -o /tmp/img_urls.txt
+
+          if [ ! -s /tmp/img_urls.txt ]; then
+            echo "No images found" >> /tmp/img_urls.txt
+            exit 0
+          fi
+
+          ISSUE_NUM="${{ github.event.issue.number }}"
+          ISSUE_DIR="images/issue-$ISSUE_NUM"
+          mkdir -p "$ISSUE_DIR"
+
+          while IFS= read -r url; do
+            [ -z "$url" ] && continue
+            echo "Downloading: $url"
+            filename=$(basename "$url" | cut -d'?' -f1)
+            [ -z "$filename" ] && filename="image-$(date +%s).png"
+            curl -sL -o "$ISSUE_DIR/$filename" "$url" || echo "Failed: $url"
+          done < /tmp/img_urls.txt
+
+      - name: Commit images
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add images/
+          if git diff --cached --quiet; then
+            echo "No new images to commit"
+          else
+            git commit -m "Upload images from issue #${{ github.event.issue.number }}"
+            git push
+          fi
+
+      - name: Comment on issue with uploaded image URLs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          ISSUE_NUM="${{ github.event.issue.number }}"
+          OWNER="${{ github.repository_owner }}"
+          REPO="${{ github.event.repository.name }}"
+
+          # Check if any images were uploaded
+          ISSUE_DIR="images/issue-$ISSUE_NUM"
+          if [ -d "$ISSUE_DIR" ] && [ "$(ls -A "$ISSUE_DIR" 2>/dev/null)" ]; then
+            COMMENT="## ✅ Images uploaded successfully
+
+            Images from this issue have been saved to the repository:
+
+            "
+            for img in "$ISSUE_DIR"/*; do
+              img_name=$(basename "$img")
+              img_url="https://raw.githubusercontent.com/$OWNER/$REPO/main/$ISSUE_DIR/$img_name"
+              COMMENT+="- [${img_name}](${img_url})"
+              COMMENT+="
+            "
+            done
+
+            COMMENT+="
+            > Powered by [image-uploads](https://github.com/$OWNER/$REPO) GitHub Action"
+          else
+            COMMENT="No images found in the issue body. To upload images, paste them directly into the issue description."
+          fi
+
+          gh issue comment "$ISSUE_NUM" --repo "$OWNER/$REPO" --body "$COMMENT"
