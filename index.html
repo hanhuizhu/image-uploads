@@ -95,23 +95,23 @@
 </head>
 <body>
 <div class="container">
-  <h1>Image Uploads <span class="badge">免 Token</span></h1>
+  <h1>Image Uploads <span class="badge">Token</span></h1>
   <p class="subtitle">上传到 <a href="https://github.com/hanhuizhu/image-uploads">hanhuizhu/image-uploads</a> · 自动返回直链</p>
 
   <!-- Mode switch -->
   <div class="mode-bar">
-    <button id="simpleModeBtn" class="active" data-mode="simple">
+    <button id="simpleModeBtn" data-mode="simple">
       免 Token
       <span class="sub-label">跳转 Issue，粘贴即传</span>
     </button>
-    <button id="tokenModeBtn" data-mode="token">
+    <button id="tokenModeBtn" class="active" data-mode="token">
       Token 模式
       <span class="sub-label">直接上传，立刻拿链接</span>
     </button>
   </div>
 
   <!-- Token bar (only visible in token mode) -->
-  <div class="token-bar hidden" id="tokenBar">
+  <div class="token-bar" id="tokenBar">
     <input type="password" id="tokenInput" placeholder="GitHub Personal Access Token (public_repo)" spellcheck="false">
     <span class="status-dot none" id="tokenDot" title="未配置"></span>
   </div>
@@ -195,7 +195,7 @@ const historyList = document.getElementById('historyList');
 
 let selectedFile = null;
 let validatedToken = null;
-let currentMode = 'simple'; // 'simple' | 'token'
+let currentMode = 'token'; // 'simple' | 'token'
 
 // ── Mode switch ──
 simpleModeBtn.addEventListener('click', () => setMode('simple'));
@@ -484,6 +484,9 @@ function copyHistoryUrl(el, url) {
   navigator.clipboard.writeText(url).then(() => { el.textContent = '已复制'; setTimeout(() => el.textContent = url, 1500); });
 }
 renderHistory();
+
+// Initial UI sync for token mode
+updateUI();
 
 // Paste image from clipboard
 document.addEventListener('paste', (e) => {
