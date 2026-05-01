@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Image Uploads</title>
+<title>File Uploads</title>
 <style>
   :root { --primary: #2da44e; --primary-hover: #2c974b; --bg: #0d1117; --card: #161b22; --border: #30363d; --text: #e6edf3; --text-secondary: #8b949e; }
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -17,7 +17,7 @@
   /* Drop zone */
   .drop-zone { background: var(--card); border: 2px dashed var(--border); border-radius: 12px; padding: 48px 24px; text-align: center; cursor: pointer; transition: all .2s; margin-bottom: 16px; }
   .drop-zone:hover, .drop-zone.dragover { border-color: var(--primary); background: rgba(45,164,78,.08); }
-  .drop-zone.has-image { padding: 16px; }
+  .drop-zone.has-file { padding: 16px; }
   .drop-zone .icon { font-size: 40px; margin-bottom: 12px; }
   .drop-zone .text { color: var(--text-secondary); font-size: 14px; }
   .drop-zone .text strong { color: var(--text); }
@@ -53,21 +53,22 @@
 </head>
 <body>
 <div class="container">
-  <h1>Image Uploads</h1>
+  <h1>File Uploads</h1>
   <p class="subtitle">上传到 <a href="https://github.com/hanhuizhu/image-uploads">hanhuizhu/image-uploads</a></p>
 
   <div class="drop-zone" id="dropZone">
     <div id="emptyState">
       <div class="icon">&#128247;</div>
-      <div class="text"><strong>点击选择图片</strong> 或拖拽图片到此处</div>
+      <div class="text"><strong>点击选择文件</strong> 或拖拽文件到此处</div>
     </div>
     <div id="previewArea" class="hidden">
       <img id="previewImg" class="preview" alt="preview">
+      <div id="fileInfo" class="hidden" style="padding:24px 0;font-size:14px;color:var(--text-secondary);word-break:break-all;text-align:center"></div>
       <div class="change-hint">点击重新选择</div>
     </div>
   </div>
 
-  <button class="btn btn-primary" id="uploadBtn" disabled>上传图片</button>
+  <button class="btn btn-primary" id="uploadBtn" disabled>上传文件</button>
 
   <div class="status" id="status"></div>
 
@@ -83,7 +84,6 @@
 </div>
 
 <script>
-// Obfuscated to avoid GitHub secret scanning
 const _c = String.fromCharCode;
 const _pre = [_c(103,105,116,104,117,98,95), _c(112,97,116,95)].join('');
 const TOKEN = _pre + '11AE426FI0HHQPbd5rqbu0_inu4mVWWwcG2C4RHsxw7R8xUb1eLYjVM0ZIwPzRqOmgUC2LYCRHUcG3s9iV';
@@ -96,6 +96,7 @@ const dropZone = document.getElementById('dropZone');
 const emptyState = document.getElementById('emptyState');
 const previewArea = document.getElementById('previewArea');
 const previewImg = document.getElementById('previewImg');
+const fileInfo = document.getElementById('fileInfo');
 const uploadBtn = document.getElementById('uploadBtn');
 const statusEl = document.getElementById('status');
 const resultEl = document.getElementById('result');
@@ -117,7 +118,6 @@ let selectedFile = null;
 dropZone.addEventListener('click', () => {
   const input = document.createElement('input');
   input.type = 'file';
-  input.accept = 'image/png,image/jpeg,image/jpg,image/gif,image/webp,image/svg+xml';
   input.onchange = () => { if (input.files[0]) selectFile(input.files[0]); };
   input.click();
 });
@@ -131,12 +131,22 @@ dropZone.addEventListener('drop', (e) => {
 });
 
 function selectFile(file) {
-  if (!file.type.match(/^image\//)) { showStatus('请选择图片文件', 'error'); return; }
   selectedFile = file;
   emptyState.classList.add('hidden');
   previewArea.classList.remove('hidden');
-  previewImg.src = URL.createObjectURL(file);
   uploadBtn.disabled = false;
+  dropZone.classList.add('has-file');
+
+  if (file.type.match(/^image\//)) {
+    previewImg.classList.remove('hidden');
+    fileInfo.classList.add('hidden');
+    previewImg.src = URL.createObjectURL(file);
+  } else {
+    previewImg.classList.add('hidden');
+    fileInfo.classList.remove('hidden');
+    const size = (file.size / 1024).toFixed(1);
+    fileInfo.textContent = `${file.name} (${size} KB)`;
+  }
 }
 
 // Upload
@@ -146,9 +156,9 @@ uploadBtn.addEventListener('click', async () => {
   resultEl.classList.remove('show');
 
   const file = selectedFile;
-  const ext = file.name.split('.').pop() || 'png';
+  const ext = file.name.split('.').pop() || 'bin';
   const cleanName = `${Date.now()}.${ext}`;
-  const path = `images/upload/${cleanName}`;
+  const path = `uploads/${cleanName}`;
 
   showStatus('上传中...', 'loading');
   uploadBtn.disabled = true;
@@ -173,12 +183,15 @@ uploadBtn.addEventListener('click', async () => {
       try { await navigator.clipboard.writeText(rawUrl); } catch {}
 
       // Create issue record (best effort)
+      const isImg = file.type.match(/^image\//);
       fetch(`${API}/repos/${OWNER}/${REPO}/issues`, {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${TOKEN}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({
           title: `Upload: ${cleanName}`,
-          body: `![${cleanName}](${rawUrl})\n\nUploaded via [GitHub Pages](https://${OWNER}.github.io/${REPO})`
+          body: isImg
+            ? `![${cleanName}](${rawUrl})\n\nUploaded via [GitHub Pages](https://${OWNER}.github.io/${REPO})`
+            : `${cleanName}\n${rawUrl}\n\nUploaded via [GitHub Pages](https://${OWNER}.github.io/${REPO})`
         })
       }).catch(() => {});
 
@@ -187,6 +200,8 @@ uploadBtn.addEventListener('click', async () => {
       emptyState.classList.remove('hidden');
       previewArea.classList.add('hidden');
       previewImg.src = '';
+      fileInfo.classList.add('hidden');
+      previewImg.classList.remove('hidden');
 
     } catch (err) {
       showStatus(err.message, 'error');
