@@ -10,29 +10,11 @@
   body { font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 40px 20px; }
   .container { max-width: 640px; width: 100%; }
 
-  h1 { font-size: 24px; margin-bottom: 4px; display: flex; align-items: center; gap: 12px; }
-  h1 .badge { font-size: 12px; font-weight: 400; background: #21262d; color: var(--text-secondary); padding: 2px 8px; border-radius: 20px; }
+  h1 { font-size: 24px; margin-bottom: 4px; }
   .subtitle { color: var(--text-secondary); font-size: 14px; margin-bottom: 24px; }
   .subtitle a { color: #58a6ff; text-decoration: none; }
-  .subtitle a:hover { text-decoration: underline; }
 
-  /* Mode switch */
-  .mode-bar { display: flex; background: var(--card); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin-bottom: 20px; }
-  .mode-bar button { flex: 1; padding: 10px 16px; border: none; background: transparent; color: var(--text-secondary); font-size: 14px; cursor: pointer; transition: all .15s; }
-  .mode-bar button.active { background: var(--primary); color: #fff; font-weight: 600; }
-  .mode-bar button:not(.active):hover { background: #21262d; color: var(--text); }
-  .mode-bar button .sub-label { display: block; font-size: 11px; opacity: .7; font-weight: 400; margin-top: 2px; }
-
-  /* Token bar */
-  .token-bar { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px; margin-bottom: 20px; display: flex; gap: 8px; align-items: center; }
-  .token-bar input { flex: 1; background: #0d1117; border: 1px solid var(--border); border-radius: 6px; padding: 8px 12px; color: var(--text); font-size: 13px; font-family: monospace; }
-  .token-bar input::placeholder { color: var(--text-secondary); }
-  .token-bar .status-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
-  .token-bar .status-dot.ok { background: var(--primary); }
-  .token-bar .status-dot.err { background: #da3633; }
-  .token-bar .status-dot.none { background: var(--text-secondary); }
-
-  /* Upload zone */
+  /* Drop zone */
   .drop-zone { background: var(--card); border: 2px dashed var(--border); border-radius: 12px; padding: 48px 24px; text-align: center; cursor: pointer; transition: all .2s; margin-bottom: 16px; }
   .drop-zone:hover, .drop-zone.dragover { border-color: var(--primary); background: rgba(45,164,78,.08); }
   .drop-zone.has-image { padding: 16px; }
@@ -42,13 +24,8 @@
   .drop-zone img.preview { max-width: 100%; max-height: 300px; border-radius: 8px; display: block; margin: 0 auto; }
   .drop-zone .change-hint { color: var(--text-secondary); font-size: 12px; margin-top: 8px; }
 
-  /* Info row */
-  .info-row { display: flex; gap: 8px; margin-bottom: 16px; }
-  .info-row input { flex: 1; background: var(--card); border: 1px solid var(--border); border-radius: 6px; padding: 8px 12px; color: var(--text); font-size: 14px; }
-  .info-row input::placeholder { color: var(--text-secondary); }
-
   /* Buttons */
-  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 10px 20px; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; border: none; transition: all .15s; width: 100%; }
+  .btn { display: inline-flex; align-items: center; justify-content: center; padding: 10px 20px; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; border: none; transition: all .15s; width: 100%; }
   .btn-primary { background: var(--primary); color: #fff; }
   .btn-primary:hover { background: var(--primary-hover); }
   .btn-primary:disabled { opacity: .5; cursor: not-allowed; }
@@ -59,69 +36,26 @@
   .status.loading { background: rgba(88,166,255,.1); border: 1px solid #58a6ff; color: #58a6ff; }
   .status.success { background: rgba(45,164,78,.1); border: 1px solid var(--primary); color: #3fb950; }
   .status.error { background: rgba(218,54,51,.1); border: 1px solid #da3633; color: #f85149; }
-  .status.info { background: rgba(210,153,34,.1); border: 1px solid #d29922; color: #d29922; }
 
   /* Result */
   .result { margin-top: 16px; display: none; }
   .result.show { display: block; }
   .result-box { background: var(--card); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
-  .result-box .url-display { padding: 12px 16px; font-family: monospace; font-size: 13px; word-break: break-all; color: #58a6ff; border-bottom: 1px solid var(--border); }
-  .result-box .actions { display: flex; gap: 0; }
+  .result-box .url-display { padding: 12px 16px; font-family: monospace; font-size: 13px; word-break: break-all; color: #58a6ff; }
+  .result-box .actions { display: flex; }
   .result-box .actions button { flex: 1; padding: 10px; border: none; background: transparent; color: var(--text); cursor: pointer; font-size: 13px; transition: background .15s; }
   .result-box .actions button:hover { background: #21262d; }
   .result-box .actions button + button { border-left: 1px solid var(--border); }
   .result-box .actions button.copied { color: var(--primary); }
 
-  /* Issue link */
-  .issue-link { text-align: center; margin-top: 12px; font-size: 13px; }
-  .issue-link a { color: #58a6ff; text-decoration: none; }
-  .issue-link a:hover { text-decoration: underline; }
-
-  /* History */
-  .history { margin-top: 32px; }
-  .history h3 { font-size: 16px; margin-bottom: 12px; }
-  .history-list { display: flex; flex-direction: column; gap: 8px; }
-  .history-item { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; font-size: 13px; }
-  .history-item .img-name { color: var(--text); }
-  .history-item .img-url { color: #58a6ff; font-family: monospace; font-size: 12px; cursor: pointer; }
-  .history-item .img-time { color: var(--text-secondary); font-size: 12px; }
-
   .hidden { display: none !important; }
-
-  /* Workflow info box */
-  .workflow-info { background: rgba(88,166,255,.08); border: 1px solid rgba(88,166,255,.3); border-radius: 8px; padding: 12px 16px; font-size: 13px; color: var(--text-secondary); margin-bottom: 16px; }
-  .workflow-info strong { color: var(--text); }
 </style>
 </head>
 <body>
 <div class="container">
-  <h1>Image Uploads <span class="badge">Token</span></h1>
-  <p class="subtitle">上传到 <a href="https://github.com/hanhuizhu/image-uploads">hanhuizhu/image-uploads</a> · 自动返回直链</p>
+  <h1>Image Uploads</h1>
+  <p class="subtitle">上传到 <a href="https://github.com/hanhuizhu/image-uploads">hanhuizhu/image-uploads</a></p>
 
-  <!-- Mode switch -->
-  <div class="mode-bar">
-    <button id="simpleModeBtn" data-mode="simple">
-      免 Token
-      <span class="sub-label">跳转 Issue，粘贴即传</span>
-    </button>
-    <button id="tokenModeBtn" class="active" data-mode="token">
-      Token 模式
-      <span class="sub-label">直接上传，立刻拿链接</span>
-    </button>
-  </div>
-
-  <!-- Token bar (only visible in token mode) -->
-  <div class="token-bar" id="tokenBar">
-    <input type="password" id="tokenInput" placeholder="GitHub Personal Access Token (public_repo)" spellcheck="false">
-    <span class="status-dot none" id="tokenDot" title="未配置"></span>
-  </div>
-
-  <!-- Workflow hint (simple mode) -->
-  <div class="workflow-info" id="workflowHint">
-    <strong>流程说明：</strong>选择图片 → 自动复制到剪贴板 → 跳转 GitHub Issue 页面 → <strong>Ctrl+V / Cmd+V 粘贴</strong> → 提交 Issue → 自动上传完成，评论区返回链接
-  </div>
-
-  <!-- Drop zone -->
   <div class="drop-zone" id="dropZone">
     <div id="emptyState">
       <div class="icon">&#128247;</div>
@@ -129,22 +63,14 @@
     </div>
     <div id="previewArea" class="hidden">
       <img id="previewImg" class="preview" alt="preview">
-      <div class="change-hint">点击重新选择图片</div>
+      <div class="change-hint">点击重新选择</div>
     </div>
   </div>
 
-  <!-- Optional name -->
-  <div class="info-row">
-    <input type="text" id="nameInput" placeholder="自定义文件名（可选，留空自动生成）" spellcheck="false">
-  </div>
-
-  <!-- Upload button -->
   <button class="btn btn-primary" id="uploadBtn" disabled>上传图片</button>
 
-  <!-- Status -->
   <div class="status" id="status"></div>
 
-  <!-- Result -->
   <div class="result" id="result">
     <div class="result-box">
       <div class="url-display" id="urlDisplay"></div>
@@ -153,115 +79,38 @@
         <button id="openBtn">在新窗口打开</button>
       </div>
     </div>
-    <div class="issue-link" id="issueLink"></div>
-  </div>
-
-  <!-- History -->
-  <div class="history" id="history">
-    <h3>最近上传</h3>
-    <div class="history-list" id="historyList"></div>
   </div>
 </div>
 
 <script>
-const TOKEN_KEY = 'gh_uploads_token';
-const HISTORY_KEY = 'gh_uploads_history';
+const TOKEN = 'GITHUB_PAT'; // 替换为你的 fine-grained token
 const OWNER = 'hanhuizhu';
 const REPO = 'image-uploads';
 const BRANCH = 'main';
 const API = 'https://api.github.com';
-const ISSUE_URL = `https://github.com/${OWNER}/${REPO}/issues/new`;
 
-// ── DOM refs ──
-const simpleModeBtn = document.getElementById('simpleModeBtn');
-const tokenModeBtn = document.getElementById('tokenModeBtn');
-const tokenBar = document.getElementById('tokenBar');
-const workflowHint = document.getElementById('workflowHint');
-const tokenInput = document.getElementById('tokenInput');
-const tokenDot = document.getElementById('tokenDot');
 const dropZone = document.getElementById('dropZone');
 const emptyState = document.getElementById('emptyState');
 const previewArea = document.getElementById('previewArea');
 const previewImg = document.getElementById('previewImg');
-const nameInput = document.getElementById('nameInput');
 const uploadBtn = document.getElementById('uploadBtn');
 const statusEl = document.getElementById('status');
 const resultEl = document.getElementById('result');
 const urlDisplay = document.getElementById('urlDisplay');
 const copyBtn = document.getElementById('copyBtn');
 const openBtn = document.getElementById('openBtn');
-const issueLink = document.getElementById('issueLink');
-const historyList = document.getElementById('historyList');
 
 let selectedFile = null;
-let validatedToken = null;
-let currentMode = 'token'; // 'simple' | 'token'
 
-// ── Mode switch ──
-simpleModeBtn.addEventListener('click', () => setMode('simple'));
-tokenModeBtn.addEventListener('click', () => setMode('token'));
-
-function setMode(mode) {
-  currentMode = mode;
-  simpleModeBtn.classList.toggle('active', mode === 'simple');
-  tokenModeBtn.classList.toggle('active', mode === 'token');
-  tokenBar.classList.toggle('hidden', mode !== 'token');
-  workflowHint.classList.toggle('hidden', mode !== 'simple');
-  // also update the badge
-  document.querySelector('h1 .badge').textContent = mode === 'simple' ? '免 Token' : 'Token';
-  // Reset file
-  selectedFile = null;
-  emptyState.classList.remove('hidden');
-  previewArea.classList.add('hidden');
-  previewImg.src = '';
-  hideStatus();
-  resultEl.classList.remove('show');
-  updateUI();
-}
-
-// ── Token ──
-const savedToken = localStorage.getItem(TOKEN_KEY);
-if (savedToken) {
-  tokenInput.value = savedToken;
-  validateToken(savedToken);
-}
-
-tokenInput.addEventListener('input', () => {
-  const t = tokenInput.value.trim();
-  if (t.length < 10) { setTokenStatus('none'); validatedToken = null; updateUI(); return; }
-  validateToken(t);
-});
-
-async function validateToken(token) {
-  setTokenStatus('loading');
+// Validate token on load
+(async () => {
   try {
-    const r = await fetch(`${API}/user`, { headers: { 'Authorization': `Bearer ${token}` } });
-    if (!r.ok) throw new Error('Invalid');
-    const scopeHeader = r.headers.get('X-OAuth-Scopes') || '';
-    if (!scopeHeader.includes('repo') && !scopeHeader.includes('public_repo')) {
-      setTokenStatus('err');
-      validatedToken = null;
-      updateUI();
-      showStatus('Token 缺少 repo 或 public_repo 权限', 'error');
-      return;
-    }
-    setTokenStatus('ok');
-    validatedToken = token;
-    localStorage.setItem(TOKEN_KEY, token);
-    updateUI();
-  } catch {
-    setTokenStatus('err');
-    validatedToken = null;
-    updateUI();
-  }
-}
+    const r = await fetch(`${API}/user`, { headers: { 'Authorization': `Bearer ${TOKEN}` } });
+    if (!r.ok) showStatus('Token 无效，请检查', 'error');
+  } catch { showStatus('无法连接 GitHub API', 'error'); }
+})();
 
-function setTokenStatus(state) {
-  tokenDot.className = 'status-dot ' + state;
-  tokenDot.title = state === 'ok' ? 'Token 有效' : state === 'err' ? 'Token 无效' : state === 'loading' ? '验证中...' : '未配置';
-}
-
-// ── File selection ──
+// Drop zone
 dropZone.addEventListener('click', () => {
   const input = document.createElement('input');
   input.type = 'file';
@@ -284,222 +133,80 @@ function selectFile(file) {
   emptyState.classList.add('hidden');
   previewArea.classList.remove('hidden');
   previewImg.src = URL.createObjectURL(file);
-  updateUI();
+  uploadBtn.disabled = false;
 }
 
-// ── Upload ──
-uploadBtn.addEventListener('click', upload);
-
-async function upload() {
+// Upload
+uploadBtn.addEventListener('click', async () => {
   if (!selectedFile) return;
   hideStatus();
   resultEl.classList.remove('show');
 
-  if (currentMode === 'simple') {
-    await uploadSimple();
-  } else {
-    await uploadWithToken();
-  }
-}
-
-/** 免 Token 模式：复制图片到剪贴板 + 跳转 GitHub Issue */
-async function uploadSimple() {
-  const file = selectedFile;
-  const baseName = nameInput.value.trim() || file.name.replace(/\.[^.]+$/, '') || 'image';
-  const body = [
-    `## Upload: ${baseName}`,
-    ``,
-    `Uploaded via [image-uploads](https://${OWNER}.github.io/${REPO})`,
-    ``,
-    `---`,
-    `> 提交后等待几秒，GitHub Action 会自动上传图片并在评论区返回链接。`
-  ].join('\n');
-
-  try {
-    // Try to copy image to clipboard
-    const blob = file instanceof File ? file : new Blob([file]);
-    const clipboardData = new ClipboardItem({ [blob.type]: blob });
-    await navigator.clipboard.write([clipboardData]);
-    showStatus('已复制到剪贴板，正在跳转...', 'info');
-  } catch {
-    // Clipboard write failed (e.g. HTTP context, older browser)
-    showStatus('正在跳转...', 'info');
-  }
-
-  // Delay a tiny bit so the status message is seen
-  await new Promise(r => setTimeout(r, 500));
-
-  // Open the GitHub new issue page
-  const params = new URLSearchParams({ body });
-  window.open(`${ISSUE_URL}?${params.toString()}`, '_blank');
-
-  // Reset
-  selectedFile = null;
-  emptyState.classList.remove('hidden');
-  previewArea.classList.add('hidden');
-  previewImg.src = '';
-  updateUI();
-}
-
-/** Token 模式：通过 GitHub API 直接上传 */
-async function uploadWithToken() {
-  if (!validatedToken) { showStatus('请先配置有效的 GitHub Token', 'error'); return; }
-
   const file = selectedFile;
   const ext = file.name.split('.').pop() || 'png';
-  const baseName = nameInput.value.trim() || `${Date.now()}`;
-  const cleanName = baseName.replace(/[^a-zA-Z0-9._-]/g, '_') + '.' + ext;
+  const cleanName = `${Date.now()}.${ext}`;
   const path = `images/upload/${cleanName}`;
 
-  showStatus('正在上传...', 'loading');
+  showStatus('上传中...', 'loading');
+  uploadBtn.disabled = true;
 
-  const b64 = await fileToBase64(file);
-  const content = b64.split(',')[1];
+  const reader = new FileReader();
+  reader.onload = async () => {
+    const content = reader.result.split(',')[1];
+    try {
+      const res = await fetch(`${API}/repos/${OWNER}/${REPO}/contents/${path}`, {
+        method: 'PUT',
+        headers: { 'Authorization': `Bearer ${TOKEN}`, 'Content-Type': 'application/json', 'Accept': 'application/vnd.github+json' },
+        body: JSON.stringify({ message: `Upload: ${cleanName}`, content, branch: BRANCH })
+      });
+      if (!res.ok) throw new Error((await res.json()).message || '上传失败');
 
-  try {
-    // Step 1: Commit file via Contents API
-    const putRes = await fetch(`${API}/repos/${OWNER}/${REPO}/contents/${path}`, {
-      method: 'PUT',
-      headers: { 'Authorization': `Bearer ${validatedToken}`, 'Content-Type': 'application/json', 'Accept': 'application/vnd.github+json' },
-      body: JSON.stringify({ message: `Upload image: ${cleanName}`, content, branch: BRANCH })
-    });
-    if (!putRes.ok) {
-      const err = await putRes.json();
-      throw new Error(err.message || '上传失败');
+      const rawUrl = `https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/${path}`;
+      showStatus('上传成功!', 'success');
+      urlDisplay.textContent = rawUrl;
+      resultEl.classList.add('show');
+
+      // Auto-copy to clipboard
+      try { await navigator.clipboard.writeText(rawUrl); } catch {}
+
+      // Create issue record (best effort)
+      fetch(`${API}/repos/${OWNER}/${REPO}/issues`, {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${TOKEN}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: `Upload: ${cleanName}`,
+          body: `![${cleanName}](${rawUrl})\n\nUploaded via [GitHub Pages](https://${OWNER}.github.io/${REPO})`
+        })
+      }).catch(() => {});
+
+      // Reset
+      selectedFile = null;
+      emptyState.classList.remove('hidden');
+      previewArea.classList.add('hidden');
+      previewImg.src = '';
+
+    } catch (err) {
+      showStatus(err.message, 'error');
     }
-    const rawUrl = `https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/${path}`;
+    uploadBtn.disabled = false;
+  };
+  reader.readAsDataURL(file);
+});
 
-    // Step 2: Create Issue as record
-    const issueBody = [
-      `## Uploaded Image`,
-      `**File:** \`${cleanName}\`  **Path:** \`${path}\``,
-      `![${cleanName}](${rawUrl})`,
-      `---`,
-      `Uploaded via [GitHub Pages](https://${OWNER}.github.io/${REPO})`
-    ].join('\n\n');
-
-    const issueRes = await fetch(`${API}/repos/${OWNER}/${REPO}/issues`, {
-      method: 'POST',
-      headers: { 'Authorization': `Bearer ${validatedToken}`, 'Content-Type': 'application/json', 'Accept': 'application/vnd.github+json' },
-      body: JSON.stringify({ title: `Upload: ${cleanName}`, body: issueBody })
-    });
-
-    let issueUrl = '';
-    if (issueRes.ok) {
-      const issueData = await issueRes.json();
-      issueUrl = issueData.html_url;
-    }
-
-    showStatus('上传成功!', 'success');
-    urlDisplay.textContent = rawUrl;
-    resultEl.classList.add('show');
-    issueLink.innerHTML = issueUrl ? `查看记录: <a href="${issueUrl}" target="_blank">Issue #${issueUrl.split('/').pop()}</a>` : '';
-    addHistory(cleanName, rawUrl);
-
-    // Reset
-    selectedFile = null;
-    emptyState.classList.remove('hidden');
-    previewArea.classList.add('hidden');
-    previewImg.src = '';
-    nameInput.value = '';
-    updateUI();
-
-  } catch (err) {
-    showStatus(err.message, 'error');
-  }
-}
-
-function fileToBase64(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = reject;
-    reader.readAsDataURL(file);
-  });
-}
-
-// ── UI helpers ──
-function updateUI() {
-  if (currentMode === 'simple') {
-    uploadBtn.disabled = !selectedFile;
-    uploadBtn.textContent = '上传图片（免 Token）';
-  } else {
-    uploadBtn.disabled = !(validatedToken && selectedFile);
-    uploadBtn.textContent = '上传图片';
-  }
-}
-
-function showStatus(msg, type) {
-  statusEl.textContent = msg;
-  statusEl.className = 'status show ' + type;
-}
-
-function hideStatus() {
-  statusEl.className = 'status';
-}
-
-// ── Clipboard & Open ──
+// Copy & Open
 copyBtn.addEventListener('click', async () => {
   const url = urlDisplay.textContent;
-  try {
-    await navigator.clipboard.writeText(url);
-    copyBtn.textContent = '已复制!';
-    copyBtn.classList.add('copied');
-    setTimeout(() => { copyBtn.textContent = '复制链接'; copyBtn.classList.remove('copied'); }, 2000);
-  } catch {
-    const ta = document.createElement('textarea');
-    ta.value = url; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove();
-    copyBtn.textContent = '已复制!';
-    setTimeout(() => copyBtn.textContent = '复制链接', 2000);
-  }
+  try { await navigator.clipboard.writeText(url); } catch { return; }
+  copyBtn.textContent = '已复制!';
+  copyBtn.classList.add('copied');
+  setTimeout(() => { copyBtn.textContent = '复制链接'; copyBtn.classList.remove('copied'); }, 2000);
 });
 
-openBtn.addEventListener('click', () => {
-  window.open(urlDisplay.textContent, '_blank');
-});
+openBtn.addEventListener('click', () => window.open(urlDisplay.textContent, '_blank'));
 
-// ── History ──
-function addHistory(name, url) {
-  const items = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
-  items.unshift({ name, url, time: Date.now() });
-  if (items.length > 20) items.length = 20;
-  localStorage.setItem(HISTORY_KEY, JSON.stringify(items));
-  renderHistory();
-}
-
-function renderHistory() {
-  const items = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
-  if (!items.length) { historyList.innerHTML = '<div class="history-item" style="color:var(--text-secondary);justify-content:center;">暂无上传记录</div>'; return; }
-  historyList.innerHTML = items.map(item => `
-    <div class="history-item">
-      <div>
-        <div class="img-name">${item.name}</div>
-        <div class="img-time">${new Date(item.time).toLocaleString()}</div>
-      </div>
-      <div class="img-url" onclick="copyHistoryUrl(this,'${item.url}')">${item.url}</div>
-    </div>
-  `).join('');
-}
-function copyHistoryUrl(el, url) {
-  navigator.clipboard.writeText(url).then(() => { el.textContent = '已复制'; setTimeout(() => el.textContent = url, 1500); });
-}
-renderHistory();
-
-// Initial UI sync for token mode
-updateUI();
-
-// Paste image from clipboard
-document.addEventListener('paste', (e) => {
-  const items = e.clipboardData?.items;
-  if (!items) return;
-  for (const item of items) {
-    if (item.type?.startsWith('image/')) {
-      const file = item.getAsFile();
-      if (file) selectFile(file);
-      break;
-    }
-  }
-});
+// Helpers
+function showStatus(msg, type) { statusEl.textContent = msg; statusEl.className = 'status show ' + type; }
+function hideStatus() { statusEl.className = 'status'; }
 </script>
 </body>
 </html>
