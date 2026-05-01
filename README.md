@@ -1,34 +1,38 @@
 # Image Uploads
 
-Automatically upload images pasted in Issues to this repository via GitHub Actions.
+Automatically upload images to this repository and get direct raw URLs.
 
-## How it works
+## Ways to upload
 
-1. Create a new Issue and paste images into the description
-2. The GitHub Action workflow triggers on `issues: opened`
-3. It extracts image URLs from the Issue body and downloads them
-4. Images are committed to `images/issue-<N>/`
-5. A comment is posted to the Issue with direct raw image URLs
+### 🖥️ Web Upload (GitHub Pages)
 
-## How to use
+Upload images via a web interface at:
 
-1. Go to the [Issues](https://github.com/hanhuizhu/image-uploads/issues) tab
-2. Click "New Issue"
-3. Paste or drag-drop images into the description
-4. Submit the issue
-5. Wait a few seconds for the Action to complete
-6. Check the issue comment for uploaded image URLs
+**https://hanhuizhu.github.io/image-uploads**
 
-## Access uploaded images
+1. Enter your GitHub token (requires `public_repo` scope)
+2. Drag & drop or select an image
+3. Click upload → get a `raw.githubusercontent.com` URL instantly
 
-Uploaded images are accessible via:
+> Token is stored only in your browser's localStorage and never sent anywhere except GitHub API.
+
+### 📝 Issue Upload
+
+1. Create a [new Issue](https://github.com/hanhuizhu/image-uploads/issues/new)
+2. Paste images into the description
+3. GitHub Action automatically commits them and posts the URLs
+
+## Image URLs
+
+All uploaded images are accessible via:
 
 ```
-https://raw.githubusercontent.com/hanhuizhu/image-uploads/main/images/issue-<N>/<filename>
+https://raw.githubusercontent.com/hanhuizhu/image-uploads/main/images/<path>
 ```
 
 ## Notes
 
-- Only public Issues will trigger the workflow
 - Supported formats: PNG, JPG, JPEG, GIF, SVG, WebP
-- GitHub Issue attachment URLs are also supported
+- Files are stored in `images/` directory:
+  - Web uploads → `images/upload/`
+  - Issue uploads → `images/issue-<N>/`
