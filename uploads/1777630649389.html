@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Waiting</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #fafafa;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .bg-texture {
+      position: fixed;
+      inset: 0;
+      background-image:
+        radial-gradient(circle at 1px 1px, rgba(0,0,0,0.03) 1px, transparent 0);
+      background-size: 24px 24px;
+      pointer-events: none;
+    }
+
+    .content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 48px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .graphic {
+      position: relative;
+      width: 200px;
+      height: 200px;
+    }
+
+    .arc {
+      position: absolute;
+      border-radius: 50%;
+      border-style: solid;
+      border-color: transparent;
+    }
+
+    .arc-1 {
+      width: 200px;
+      height: 200px;
+      border-width: 18px;
+      border-top-color: #c026d3;
+      border-right-color: #c026d3;
+      top: 0; left: 0;
+      animation: spin 2s linear infinite;
+    }
+
+    .arc-2 {
+      width: 200px;
+      height: 200px;
+      border-width: 14px;
+      border-bottom-color: #7c3aed;
+      border-left-color: #7c3aed;
+      top: 9px; left: 9px;
+      animation: spin 2.5s linear infinite reverse;
+    }
+
+    .arc-3 {
+      width: 160px;
+      height: 160px;
+      border-width: 12px;
+      border-top-color: #db2777;
+      border-left-color: #db2777;
+      top: 20px; left: 20px;
+      animation: spin 3s linear infinite;
+    }
+
+    .arc-4 {
+      width: 160px;
+      height: 160px;
+      border-width: 8px;
+      border-bottom-color: #2563eb;
+      border-right-color: #2563eb;
+      top: 26px; left: 26px;
+      animation: spin 3.5s linear infinite reverse;
+    }
+
+    .arc-5 {
+      width: 130px;
+      height: 130px;
+      border-width: 10px;
+      border-top-color: #06b6d4;
+      border-right-color: #06b6d4;
+      top: 35px; left: 35px;
+      animation: spin 4s linear infinite;
+    }
+
+    .arc-6 {
+      width: 100px;
+      height: 100px;
+      border-width: 6px;
+      border-bottom-color: #8b5cf6;
+      border-left-color: #8b5cf6;
+      top: 50px; left: 50px;
+      animation: spin 4.5s linear infinite reverse;
+    }
+
+    .core-dot {
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #e0e0e0;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      box-shadow: 0 0 0 4px #fafafa;
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .bottom {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .progress-track {
+      width: 280px;
+      height: 2px;
+      background: #e5e7eb;
+      border-radius: 1px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, #c026d3, #2563eb);
+      border-radius: 1px;
+      animation: progress 2s ease-in-out infinite;
+    }
+
+    @keyframes progress {
+      0% { width: 0%; }
+      50% { width: 70%; }
+      100% { width: 100%; }
+    }
+
+    .status {
+      font-size: 13px;
+      color: #9ca3af;
+      letter-spacing: 0.5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-texture"></div>
+  <div class="content">
+    <div class="graphic">
+      <div class="arc arc-1"></div>
+      <div class="arc arc-2"></div>
+      <div class="arc arc-3"></div>
+      <div class="arc arc-4"></div>
+      <div class="arc arc-5"></div>
+      <div class="arc arc-6"></div>
+      <div class="core-dot"></div>
+    </div>
+    <div class="bottom">
+      <div class="progress-track">
+        <div class="progress-bar"></div>
+      </div>
+      <span class="status">Waiting for model...</span>
+    </div>
+  </div>
+</body>
+</html>
